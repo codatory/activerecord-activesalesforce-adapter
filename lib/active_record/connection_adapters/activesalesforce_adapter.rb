@@ -417,7 +417,9 @@ module ActiveRecord
           fields = get_fields(columns, names, values, :updateable)
 		      null_fields = get_null_fields(columns, names, values, :updateable)          
           
-          id = sql.match(/WHERE\s+id\s*=\s*'(\w+)'/mi)[1]
+          ids = sql.match(/WHERE\s+id\s*=\s*'(\w+)'/mi)
+          return if ids.nil?
+          id = ids[1]
           
           sobject = create_sobject(entity_def.api_name, id, fields, null_fields)
           
