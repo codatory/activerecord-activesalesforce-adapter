@@ -155,7 +155,10 @@ module ActiveRecord
       def supports_migrations? #:nodoc:
         false
       end
-      
+
+      def table_exists?(table_name)
+        true
+      end
       
       # QUOTING ==================================================
             
