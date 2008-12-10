@@ -705,7 +705,7 @@ module ActiveRecord
             
             if referenced_klass
               if one_to_many
-                klass.has_many referenceName.to_sym, :class_name => referenced_klass.name, :foreign_key => foreign_key, :dependent => :nullify
+                klass.has_many referenceName.to_sym, :class_name => referenced_klass.name, :foreign_key => foreign_key
               else
                 klass.belongs_to referenceName.to_sym, :class_name => referenced_klass.name, :foreign_key => foreign_key
               end
