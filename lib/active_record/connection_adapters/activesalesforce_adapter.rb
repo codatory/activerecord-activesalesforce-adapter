@@ -700,9 +700,7 @@ module ActiveRecord
                 referenced_klass = klass.class_eval("::#{reference_to} = Class.new(ActiveRecord::Base)")
                 
                 # Automatically inherit the connection from the referencee
-                def referenced_klass.connection
-                  klass.connection
-                end
+                referenced_klass.connection = klass.connection
             end
             
             if referenced_klass
