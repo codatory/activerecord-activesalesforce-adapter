@@ -131,7 +131,7 @@ module ActiveRecord
         @entity_def_map = {}
         @keyprefix_to_entity_def_map = {}
         
-        @command_boxcar = []
+        @command_boxcar = nil
         @class_to_entity_map = {}
       end
       
@@ -250,6 +250,9 @@ module ActiveRecord
 	        previous_command = command
           end
         end
+
+        # Discard the command boxcar
+        @command_boxcar = nil
         
         # Finish off the partial boxcar
         send_commands(commands) unless commands.empty?
@@ -260,7 +263,7 @@ module ActiveRecord
       # done if the transaction block raises an exception or returns false.
       def rollback_db_transaction() 
         log('Rolling back boxcar', 'rollback_db_transaction()')
-        @command_boxcar = []
+        @command_boxcar = nil
       end
       
       
@@ -398,7 +401,7 @@ module ActiveRecord
           
           # Track the id to be able to update it when the create() is actually executed
           id = String.new
-          @command_boxcar << ActiveSalesforce::BoxcarCommand::Insert.new(self, sobject, id)
+          queue_command ActiveSalesforce::BoxcarCommand::Insert.new(self, sobject, id)
           
           id
         }
@@ -426,7 +429,7 @@ module ActiveRecord
           
           sobject = create_sobject(entity_def.api_name, id, fields, null_fields)
           
-          @command_boxcar << ActiveSalesforce::BoxcarCommand::Update.new(self, sobject)
+          queue_command ActiveSalesforce::BoxcarCommand::Update.new(self, sobject)
         #}
       end
       
@@ -447,7 +450,7 @@ module ActiveRecord
           ids_element = []        
           ids.each { |id| ids_element << :ids << id }
           
-          @command_boxcar << ActiveSalesforce::BoxcarCommand::Delete.new(self, ids_element)
+          queue_command ActiveSalesforce::BoxcarCommand::Delete.new(self, ids_element)
         }
       end
       
@@ -776,6 +779,21 @@ module ActiveRecord
       
       def debug(msg)
         @logger.debug(msg) if @logger
+      end
+
+      protected
+
+      def queue_command(command)
+        # If @command_boxcar is not nil, then this is a transaction
+        # and commands should be queued in the boxcar
+        if @command_boxcar
+          @command_boxcar << command
+
+        # If a command is not executed within a transaction, it should
+        # be executed immediately
+        else
+          send_commands([command])
+        end
       end
       
     end
