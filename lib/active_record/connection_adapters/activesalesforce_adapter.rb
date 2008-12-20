@@ -708,9 +708,11 @@ module ActiveRecord
             
             if referenced_klass
               if one_to_many
-                klass.has_many referenceName.to_sym, :class_name => referenced_klass.name, :foreign_key => foreign_key
+                assoc_name = reference_to.underscore.pluralize.to_sym
+                klass.has_many assoc_name, :class_name => referenced_klass.name, :foreign_key => foreign_key
               else
-                klass.belongs_to referenceName.to_sym, :class_name => referenced_klass.name, :foreign_key => foreign_key
+                assoc_name = reference_to.underscore.singularize.to_sym
+                klass.belongs_to assoc_name, :class_name => referenced_klass.name, :foreign_key => foreign_key
               end
               
               debug("   Created one-to-#{one_to_many ? 'many' : 'one' } relationship '#{referenceName}' from #{klass} to #{referenced_klass} using #{foreign_key}")
