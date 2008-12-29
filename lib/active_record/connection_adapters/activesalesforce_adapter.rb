@@ -21,7 +21,7 @@ require 'benchmark'
 require 'active_record'
 require 'active_record/connection_adapters/abstract_adapter'
 
-require File.dirname(__FILE__) + '/rforce'
+require File.dirname(__FILE__) + '/../../rforce'
 require File.dirname(__FILE__) + '/column_definition'
 require File.dirname(__FILE__) + '/relationship_definition'
 require File.dirname(__FILE__) + '/boxcar_command'
