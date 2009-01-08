@@ -733,9 +733,8 @@ module ActiveRecord
         entity_klass = @class_to_entity_map[entity_name.upcase]
         debug("Found matching class '#{entity_klass}' for entity '#{entity_name}'") if entity_klass
         
-        # Try to constantize entities under the Salesforce namespace; but
-        # fall back on un-namespaced classes.
-        entity_klass = ("Salesforce::" + entity_name).constantize rescue entity_name.constantize unless entity_klass
+        # Constantize entities under the Salesforce namespace.
+        entity_klass = ("Salesforce::" + entity_name).constantize unless entity_klass
         
         entity_klass
       end
