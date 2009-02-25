@@ -187,9 +187,29 @@ module ActiveRecord
       
       
       # TRANSACTIOn SUPPORT (Boxcarring really because the salesforce.com api does not support transactions)
+
+      # Override AbstractAdapter's transaction method to implement
+      # per-connection support for nested transactions that do not commit until
+      # the outermost transaction is finished. ActiveRecord provides support
+      # for this, but does not distinguish between database connections, which
+      # prevents opening transactions to two different databases at the same
+      # time.
+      def transaction_with_nesting_support(*args, &block)
+        open = Thread.current["open_transactions_for_#{self.class.name.underscore}"] ||= 0
+        Thread.current["start_db_transaction_for_#{self.class.name.underscore}"] = open.zero?
+        Thread.current["open_transactions_for_#{self.class.name.underscore}"] = open + 1
+
+        begin
+          transaction_without_nesting_support(Thread.current["start_db_transaction_for_#{self.class.name.underscore}"], 
+                                              &block)
+        ensure
+          Thread.current["open_transactions_for_#{self.class.name.underscore}"] -= 1
+        end
+      end
+      alias_method_chain :transaction, :nesting_support
       
       # Begins the transaction (and turns off auto-committing).
-      def begin_db_transaction()    
+      def begin_db_transaction
         log('Opening boxcar', 'begin_db_transaction()')
         @command_boxcar = []
       end
