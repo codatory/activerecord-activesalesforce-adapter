@@ -196,12 +196,10 @@ module ActiveRecord
       # time.
       def transaction_with_nesting_support(*args, &block)
         open = Thread.current["open_transactions_for_#{self.class.name.underscore}"] ||= 0
-        Thread.current["start_db_transaction_for_#{self.class.name.underscore}"] = open.zero?
         Thread.current["open_transactions_for_#{self.class.name.underscore}"] = open + 1
 
         begin
-          transaction_without_nesting_support(Thread.current["start_db_transaction_for_#{self.class.name.underscore}"], 
-                                              &block)
+          transaction_without_nesting_support(open.zero?, &block)
         ensure
           Thread.current["open_transactions_for_#{self.class.name.underscore}"] -= 1
         end
