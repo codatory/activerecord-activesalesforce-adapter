@@ -199,7 +199,7 @@ module ActiveRecord
         Thread.current["open_transactions_for_#{self.class.name.underscore}"] = open + 1
 
         begin
-          transaction_without_nesting_support(open.zero?, &block)
+          transaction_without_nesting_support(args, &block)
         ensure
           Thread.current["open_transactions_for_#{self.class.name.underscore}"] -= 1
         end
@@ -721,7 +721,9 @@ module ActiveRecord
                 referenced_klass = klass.class_eval("::#{reference_to} = Class.new(ActiveRecord::Base)")
                 
                 # Automatically inherit the connection from the referencee
-                referenced_klass.connection = klass.connection
+               def referenced_klass.connection
+                 klass.connection
+               end
             end
             
             if referenced_klass
