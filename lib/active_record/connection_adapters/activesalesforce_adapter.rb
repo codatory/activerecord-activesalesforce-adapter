@@ -199,7 +199,7 @@ module ActiveRecord
         Thread.current["open_transactions_for_#{self.class.name.underscore}"] = open + 1
 
         begin
-          transaction_without_nesting_support(args, &block)
+          transaction_without_nesting_support(&block)
         ensure
           Thread.current["open_transactions_for_#{self.class.name.underscore}"] -= 1
         end
