@@ -718,13 +718,14 @@ module ActiveRecord
                 # Automatically create a least a stub for the referenced entity
                 debug("   Creating ActiveRecord stub for the referenced entity '#{reference_to}'")
                 
-                referenced_klass = klass.class_eval("::#{reference_to} = Class.new(ActiveRecord::Base)")
-                
+                referenced_klass = klass.class_eval("Salesforce::#{reference_to} = Class.new(ActiveRecord::Base)")
+                referenced_klass.instance_variable_set("@asf_connection", klass.connection)
+
                 # Automatically inherit the connection from the referencee
-               def referenced_klass.connection
-                 klass.connection
-               end
-            end
+                def referenced_klass.connection
+                  @asf_connection
+                end
+           end
             
             if referenced_klass
               if one_to_many
