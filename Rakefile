@@ -7,6 +7,8 @@ begin
     gemspec.homepage = "http://github.com/johnreilly/activerecord-activesalesforce-adapter"
     gemspec.authors = ["Doug Chasman","Luigi Montanez","Senthil Nayagam","Justin Ball","Jesse Hallett"]
     
+    gemspec.test_files = 'test/**/*'
+    
     gemspec.add_dependency('rails', '>= 2.3.3')
     gemspec.add_dependency('builder', '>= 1.2.4')
     gemspec.add_dependency('xmlparser', '>= 0.6')
