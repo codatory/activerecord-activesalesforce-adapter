@@ -2,17 +2,18 @@
 
 Gem::Specification.new do |s|
   s.name = %q{activerecord-activesalesforce-adapter}
-  s.version = "2.3.4"
+  s.version = "2.3.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Doug Chasman", "Luigi Montanez", "Senthil Nayagam", "Justin Ball", "Jesse Hallett"]
-  s.date = %q{2009-08-02}
+  s.date = %q{2009-08-03}
   s.email = %q{jr@trms.com}
   s.extra_rdoc_files = [
     "README"
   ]
   s.files = [
-    "README",
+    ".gitignore",
+     "README",
      "Rakefile",
      "VERSION",
      "activerecord-activesalesforce-adapter.gemspec",
@@ -27,6 +28,7 @@ Gem::Specification.new do |s|
      "lib/active_record/connection_adapters/relationship_definition.rb",
      "lib/active_record/connection_adapters/result_array.rb",
      "lib/active_record/connection_adapters/sid_authentication_filter.rb",
+     "lib/activerecord-activesalesforce-adapter.rb",
      "lib/rforce.rb",
      "lib/rforce/binding.rb",
      "lib/rforce/method_keys.rb",
