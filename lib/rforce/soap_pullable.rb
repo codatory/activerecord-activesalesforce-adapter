@@ -23,7 +23,10 @@ module RForce
     end
     
     def text(data)
-      @current_value = data.strip.empty? ? nil : data
+      unless data.nil? || data.strip.empty? 
+        @current_value = "" if @current_value.nil?
+        @current_value << data
+      end
     end
     
     def tag_end(name)
