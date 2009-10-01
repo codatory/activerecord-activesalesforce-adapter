@@ -23,14 +23,15 @@ require File.dirname(__FILE__) + '/../../lib/active_record/connection_adapters/a
 require File.dirname(__FILE__) + '/recorded_test_case'
 require 'pp'
 
+module Salesforce
+  class Contact < ActiveRecord::Base
+  end
 
-class Contact < ActiveRecord::Base
-end
+  class Department < ActiveRecord::Base
+  end
 
-class Department < ActiveRecord::Base
-end
-
-class Address < ActiveRecord::Base
+  class Address < ActiveRecord::Base
+  end
 end
 
 
@@ -53,7 +54,7 @@ module Asf
 
         super
 
-        @contact = Contact.new
+        @contact = Salesforce::Contact.new
         
         reset_header_options
         
@@ -74,7 +75,7 @@ module Asf
       end
       
       def reset_header_options
-        binding = Contact.connection.binding
+        binding = Salesforce::Contact.connection.binding
         binding.assignment_rule_id = nil
         binding.use_default_rule = false
         binding.update_mru = false
@@ -87,7 +88,7 @@ module Asf
       end
 
       def test_count_contacts
-        assert Contact.count > 0
+        assert Salesforce::Contact.count > 0
       end
       
       def test_save_a_contact
@@ -95,22 +96,22 @@ module Asf
       end
 
       def test_find_a_contact
-        c = Contact.find(contact.id)
+        c = Salesforce::Contact.find(contact.id)
         assert_equal contact.id, c.id
       end
 
       def test_find_a_contact_by_id
-        c = Contact.find_by_id(contact.id)
+        c = Salesforce::Contact.find_by_id(contact.id)
         assert_equal contact.id, c.id
       end
 
       def test_find_a_contact_by_first_name
-        c = Contact.find_by_first_name('DutchTestFirstName')
+        c = Salesforce::Contact.find_by_first_name('DutchTestFirstName')
         assert_equal contact.id, c.id
       end
       
       def test_read_all_content_columns
-        Contact.content_columns.each { |column| contact.send(column.name) }
+        Salesforce::Contact.content_columns.each { |column| contact.send(column.name) }
       end
             
       def test_get_created_by_from_contact
@@ -119,29 +120,29 @@ module Asf
       end
       
       def test_use_update_mru
-        Contact.connection.binding.update_mru = true
+        Salesforce::Contact.connection.binding.update_mru = true
         contact.save
       end
 
       def test_use_default_rule
-        Contact.connection.binding.use_default_rule = true
+        Salesforce::Contact.connection.binding.use_default_rule = true
         contact.save
       end
 
       def test_assignment_rule_id
-        Contact.connection.binding.assignment_rule_id = "1234567890"
+        Salesforce::Contact.connection.binding.assignment_rule_id = "1234567890"
         contact.save
       end
       
       def test_client_id
-        Contact.connection.binding.client_id = "testClient"
+        Salesforce::Contact.connection.binding.client_id = "testClient"
         contact.save
       end
       
  
       def test_add_notes_to_contact
-        n1 = Note.new(:title => "My Title", :body => "My Body")
-        n2 = Note.new(:title => "My Title 2", :body => "My Body 2")
+        n1 = Salesforce::Note.new(:title => "My Title", :body => "My Body")
+        n2 = Salesforce::Note.new(:title => "My Title 2", :body => "My Body 2")
         
         contact.notes << n1
         contact.notes << n2
@@ -151,7 +152,7 @@ module Asf
       end
       
       def test_master_detail
-        department = Department.new(:department_description__c => 'DutchTestDepartment description')
+        department = Salesforce::Department.new(:department_description__c => 'DutchTestDepartment description')
         department.save
         department.reload
         
@@ -164,11 +165,11 @@ module Asf
 
       
       def test_batch_insert
-        c1 = Contact.new(:first_name => 'FN1', :last_name => 'LN1')
-        c2 = Contact.new(:first_name => 'FN2', :last_name => 'LN2')
-        c3 = Contact.new(:first_name => 'FN3', :last_name => 'LN3')
+        c1 = Salesforce::Contact.new(:first_name => 'FN1', :last_name => 'LN1')
+        c2 = Salesforce::Contact.new(:first_name => 'FN2', :last_name => 'LN2')
+        c3 = Salesforce::Contact.new(:first_name => 'FN3', :last_name => 'LN3')
 
-        Contact.transaction(c1, c2) do
+        Salesforce::Contact.transaction(c1, c2) do
           c1.save
           c2.save
         end
@@ -179,12 +180,12 @@ module Asf
         c2.first_name << '_2'        
         c3.first_name << '_2'        
 
-        Contact.transaction(c1, c2) do
+        Salesforce::Contact.transaction(c1, c2) do
           c1.save
           c2.save
         end
         
-        Contact.transaction(c1, c2) do
+        Salesforce::Contact.transaction(c1, c2) do
           c3.save
         
           c3.destroy
@@ -194,7 +195,7 @@ module Asf
       end
       
       def test_find_addresses
-        adresses = Address.find(:all)
+        adresses = Salesforce::Address.find(:all)
       end
                   
     end
