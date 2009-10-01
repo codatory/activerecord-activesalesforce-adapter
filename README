@@ -14,7 +14,7 @@ ActiveSalesforce is an extension to the Rails Framework that allows for the dyna
 
     Rails::Initializer.run do |config|
       ...
-      config.gem 'activerecord-activesalesforce-adapter'
+      config.gem "johnreilly-activerecord-activesalesforce-adapter", :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
       ...
     end
 
