@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
      "README",
      "Rakefile",
      "VERSION",
-     "activerecord-activesalesforce-adapter.gemspec",
      "lib/active_record/connection_adapters/activesalesforce.rb",
      "lib/active_record/connection_adapters/activesalesforce_adapter.rb",
      "lib/active_record/connection_adapters/asf_active_record.rb",
@@ -31,7 +30,6 @@ Gem::Specification.new do |s|
      "lib/active_record/connection_adapters/relationship_definition.rb",
      "lib/active_record/connection_adapters/result_array.rb",
      "lib/active_record/connection_adapters/sid_authentication_filter.rb",
-     "lib/activerecord-activesalesforce-adapter.rb",
      "lib/rforce.rb",
      "lib/rforce/binding.rb",
      "lib/rforce/method_keys.rb",
@@ -60,7 +58,7 @@ Gem::Specification.new do |s|
      "test/unit/recorded_results/AsfUnitTestsBasicTest.test_use_update_mru.recording",
      "test/unit/recorded_test_case.rb"
   ]
-  s.homepage = %q{http://github.com/althor880/althor880-activerecord-activesalesforce-adapter}
+  s.homepage = %q{http://github.com/althor880/activerecord-activesalesforce-adapter}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
