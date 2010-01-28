@@ -4,7 +4,7 @@ ActiveSalesforce is an extension to the Rails Framework that allows for the dyna
 
 == Getting started
 
-1. gem install jramos-activerecord-activesalesforce-adapter --source http://gems.github.com
+1. gem install jramos-activerecord-activesalesforce-adapter --source http://gemcutter.org
 
 2. If you have not already done so generate your initial rails app:
 
@@ -14,7 +14,7 @@ ActiveSalesforce is an extension to the Rails Framework that allows for the dyna
 
     Rails::Initializer.run do |config|
       ...
-      config.gem "jramos-activerecord-activesalesforce-adapter", :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
+      config.gem "jramos-activerecord-activesalesforce-adapter", :source => 'http://gemcutter.org', :lib => 'activerecord-activesalesforce-adapter'
       ...
     end
 
