@@ -8,10 +8,11 @@ module RForce
   # object whose methods correspond to nested XML elements.
   class SoapResponseRexml
     include SoapPullable
+    include MethodKeys
 
     %w(attlistdecl cdata comment doctype doctype_end elementdecl
        entity entitydecl instruction notationdecl xmldecl).each do |unused|
-      define_method(unused) {}
+      define_method(unused) {|*args|}
     end
 
     def initialize(content)
@@ -22,7 +23,7 @@ module RForce
     def parse
       @current_value = nil
       @stack = []
-      @parsed = OpenHash.new({})
+      @parsed = {}
       @done = false
       @namespaces = []
 

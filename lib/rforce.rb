@@ -1,6 +1,5 @@
 =begin
-RForce v0.3
-Copyright (c) 2005-2008 Ian Dees and contributors
+Copyright (c) 2005-2010 Ian Dees and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +28,7 @@ SOFTWARE.
 #
 #  Example:
 #
-#    binding = RForce::Binding.new 'na1-api.salesforce.com'
+#    binding = RForce::Binding.new 'https://www.salesforce.com/services/Soap/u/10.0'
 #    binding.login 'username', 'password'
 #    answer = binding.search(
 #      :searchString =>
@@ -47,37 +46,10 @@ SOFTWARE.
 #    binding.create 'sObject {"xsi:type" => "Opportunity"}' => opportunity
 #
 
-
-require 'net/https'
-require 'uri'
-require 'zlib'
-require 'stringio'
-
-require 'rubygems'
-
-gem 'builder', '>= 2.0.0'
-require 'builder'
-
-gem 'facets', '>= 2.4'
-require 'facets/openhash'
-
 require 'rforce/binding'
-require 'rforce/soap_response_rexml'
-require 'rforce/soap_response_hpricot' rescue nil
-require 'rforce/soap_response_expat' rescue nil
-
+require 'rforce/soap_response'
 
 module RForce
-  # Use the fastest XML parser available.
-  def self.parser(name)
-      RForce.const_get(name) rescue nil
-  end
-  
-  SoapResponse = 
-    parser(:SoapResponseExpat) ||
-    parser(:SoapResponseHpricot) ||
-    SoapResponseRexml
-  
   # Expand Ruby data structures into XML.
   def expand(builder, args, xmlns = nil)
     # Nest arrays: [:a, 1, :b, 2] => [[:a, 1], [:b, 2]]
@@ -104,13 +76,12 @@ module RForce
       # Create an XML element and fill it with this
       # value's sub-items.
       case value
-      when Hash, Array
+      when Hash, Array then
         builder.tag!(key, attributes) do expand builder, value; end
 
-      when String
+      when String then
         builder.tag!(key, attributes) { builder.text! value }
       end
     end
   end
-  
 end

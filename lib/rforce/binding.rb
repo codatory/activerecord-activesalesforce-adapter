@@ -1,3 +1,10 @@
+require 'net/https'
+require 'uri'
+require 'zlib'
+require 'stringio'
+require 'builder'
+
+
 module RForce
   # Implements the connection to the SalesForce server.
   class Binding
@@ -69,7 +76,7 @@ module RForce
 
       response = call_remote(:login, [:username, user, :password, password])
       
-      raise "Incorrect user name / password [#{response[:Fault][:faultstring]}]" unless response.loginResponse
+      raise "Incorrect user name / password [#{response.fault}]" unless response.loginResponse
 
       result = response[:loginResponse][:result]
       @session_id = result[:sessionId]
@@ -84,10 +91,13 @@ module RForce
     # a hash or (if order is important) an array of alternating
     # keys and values.
     def call_remote(method, args)
+
+      urn, soap_url = block_given? ? yield : ["urn:partner.soap.sforce.com", @url.path]
+
       # Create XML text from the arguments.
       expanded = ''
       @builder = Builder::XmlMarkup.new(:target => expanded)
-      expand(@builder, {method => args}, 'urn:partner.soap.sforce.com')
+      expand(@builder, {method => args}, urn)
 
       extra_headers = ""
       extra_headers << (AssignmentRuleHeaderUsingRuleId % assignment_rule_id) if assignment_rule_id
@@ -128,7 +138,7 @@ module RForce
       end
 
       # Send the request to the server and read the response.
-      response = @server.post2(@url.path, request.lstrip, headers)
+      response = @server.post2(soap_url, request.lstrip, headers)
 
       # decode if we have encoding
       content = decode(response)
@@ -142,7 +152,7 @@ module RForce
         request = encode(request)
 
         # Send the request to the server and read the response.
-        response = @server.post2(@url.path, request.lstrip, headers)
+        response = @server.post2(soap_url, request.lstrip, headers)
 
         content = decode(response)
       end
@@ -160,7 +170,7 @@ module RForce
 
       # decode gzip
       case encoding.strip
-      when 'gzip':
+      when 'gzip' then
         begin
           gzr = Zlib::GzipReader.new(StringIO.new(response.body))
           decoded = gzr.read
