@@ -11,6 +11,7 @@ begin
     
     gemspec.add_dependency('rails', '>= 2.3.3')
     gemspec.add_dependency('builder', '>= 1.2.4')
+    gemspec.add_dependency('hpricot', '>=0.8.2')
 
     
   end
