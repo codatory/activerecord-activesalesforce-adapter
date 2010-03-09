@@ -5,17 +5,18 @@
 
 Gem::Specification.new do |s|
   s.name = %q{althor880-activerecord-activesalesforce-adapter}
-  s.version = "2.3.6"
+  s.version = "2.3.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Doug Chasman", "Luigi Montanez", "Senthil Nayagam", "Justin Ball", "Jesse Hallett", "Andrew Freeberg"]
-  s.date = %q{2010-03-08}
+  s.date = %q{2010-03-09}
   s.email = %q{althor880@gmail.com}
   s.extra_rdoc_files = [
     "README"
   ]
   s.files = [
     ".gitignore",
+     ".project",
      "README",
      "Rakefile",
      "VERSION",
@@ -97,13 +98,16 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rails>, [">= 2.3.3"])
       s.add_runtime_dependency(%q<builder>, [">= 1.2.4"])
+      s.add_runtime_dependency(%q<hpricot>, [">= 0.8.2"])
     else
       s.add_dependency(%q<rails>, [">= 2.3.3"])
       s.add_dependency(%q<builder>, [">= 1.2.4"])
+      s.add_dependency(%q<hpricot>, [">= 0.8.2"])
     end
   else
     s.add_dependency(%q<rails>, [">= 2.3.3"])
     s.add_dependency(%q<builder>, [">= 1.2.4"])
+    s.add_dependency(%q<hpricot>, [">= 0.8.2"])
   end
 end
 
