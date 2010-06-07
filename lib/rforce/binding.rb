@@ -60,6 +60,7 @@ module RForce
     def init_server(url)
       @url = URI.parse(url)
       @server = Net::HTTP.new(@url.host, @url.port)
+      @server.read_timeout = 15 # 15 second read timeout      
       @server.use_ssl = @url.scheme == 'https'
       @server.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
