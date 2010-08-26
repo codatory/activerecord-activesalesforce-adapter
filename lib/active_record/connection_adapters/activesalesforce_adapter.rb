@@ -48,6 +48,7 @@ module ActiveRecord
     # Establishes a connection to the database that's used by all Active Record objects.
     def self.activesalesforce_connection(config) # :nodoc:
       debug("\nUsing ActiveSalesforce connection\n")
+      config = YAML.load_file(Rails.root+"config"+'activesalesforce.yml').symbolize_keys
       
       # Default to production system using 11.0 API
       url = config[:url]
