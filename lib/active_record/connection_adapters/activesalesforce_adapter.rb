@@ -156,10 +156,10 @@ module ActiveRecord
         false
       end
       
-      def tables(name = nil)
-        nil
+      def tables(name = nil) #:nodoc:
+        @connection.describeGlobal({}).describeGlobalResponse.result.types
       end
-
+      
       def table_exists?(table_name)
         true
       end
@@ -292,7 +292,10 @@ module ActiveRecord
       # DATABASE STATEMENTS ======================================
       
       def select_all(sql, name = nil) #:nodoc:
-        raw_table_name = sql.match(/FROM (\w+)/mi)[1]
+        # Arel adds the class to the selection - we do not want this i.e...
+        # SELECT     contacts.* FROM  => SELECT * FROM
+        sql = sql.gsub(/\s+[^\(][A-Z]+\./mi," ")
+        raw_table_name = sql.match(/FROM\s+(\w+)/mi)[1]
           table_name, columns, entity_def = lookup(raw_table_name)
           
           column_names = columns.map { |column| column.api_name }
@@ -395,6 +398,8 @@ module ActiveRecord
       end
       
       def select_one(sql, name = nil) #:nodoc:
+        debug "#{sql}"
+        puts "#{sql}"
         self.batch_size = 1
         
         result = select_all(sql, name)
