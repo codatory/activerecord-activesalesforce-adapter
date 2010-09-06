@@ -212,7 +212,7 @@ module ActiveRecord
       
       # Begins the transaction (and turns off auto-committing).
       def begin_db_transaction
-        log('Opening boxcar', 'begin_db_transaction()')
+        # log('Opening boxcar', 'begin_db_transaction()')
         @command_boxcar = []
       end
       
@@ -256,7 +256,8 @@ module ActiveRecord
        
       # Commits the transaction (and turns on auto-committing).
       def commit_db_transaction()   
-        log("Committing boxcar with #{@command_boxcar.length} commands", 'commit_db_transaction()')
+        # log("Committing boxcar with #{@command_boxcar.length} commands", 'commit_db_transaction()')
+        puts("Committing boxcar with #{@command_boxcar.length} commands", 'commit_db_transaction()')
         
         previous_command = nil
         commands = []
@@ -284,7 +285,7 @@ module ActiveRecord
       # Rolls back the transaction (and turns on auto-committing). Must be
       # done if the transaction block raises an exception or returns false.
       def rollback_db_transaction() 
-        log('Rolling back boxcar', 'rollback_db_transaction()')
+        # log('Rolling back boxcar', 'rollback_db_transaction()')
         @command_boxcar = nil
       end
       
@@ -409,7 +410,7 @@ module ActiveRecord
       
       
       def insert(sql, name = nil, pk = nil, id_value = nil, sequence_name = nil)
-        log(sql, name) {
+        # log(sql, name) {
           # Convert sql to sobject
           table_name, columns, entity_def = lookup(sql.match(/INSERT\s+INTO\s+(\w+)\s+/mi)[1])
           columns = entity_def.column_name_to_column
@@ -431,12 +432,14 @@ module ActiveRecord
           queue_command ActiveSalesforce::BoxcarCommand::Insert.new(self, sobject, id)
           
           id
-        }
+        # }
       end      
       
       
       def update(sql, name = nil) #:nodoc:
-        #log(sql, name) {
+        sql = sql.gsub(/WHERE\s+\([A-Z]+\./mi,"WHERE ")
+        puts("Update: #{sql}, #{name}")
+        # log(sql, name) {
           # Convert sql to sobject
           table_name, columns, entity_def = lookup(sql.match(/UPDATE\s+(\w+)\s+/mi)[1])
           columns = entity_def.column_name_to_column
@@ -451,6 +454,7 @@ module ActiveRecord
 		      null_fields = get_null_fields(columns, names, values, :updateable)          
           
           ids = sql.match(/WHERE\s+id\s*=\s*'(\w+)'/mi)
+          puts "return if ids.nil? #{ids}"
           return if ids.nil?
           id = ids[1]
           
@@ -462,7 +466,7 @@ module ActiveRecord
       
       
       def delete(sql, name = nil) 
-        log(sql, name) {
+        # log(sql, name) {
           # Extract the id
           match = sql.match(/WHERE\s+id\s*=\s*'(\w+)'/mi)
           
@@ -478,13 +482,13 @@ module ActiveRecord
           ids.each { |id| ids_element << :ids << id }
           
           queue_command ActiveSalesforce::BoxcarCommand::Delete.new(self, ids_element)
-        }
+        # }
       end
       
       
       def get_updated(object_type, start_date, end_date, name = nil)
         msg = "get_updated(#{object_type}, #{start_date}, #{end_date})"
-        log(msg, name) {
+        # log(msg, name) {
           get_updated_element = []
           get_updated_element << 'type { :xmlns => "urn:sobject.partner.soap.sforce.com" }' << object_type
           get_updated_element << :startDate << start_date
@@ -493,13 +497,13 @@ module ActiveRecord
           result = get_result(@connection.getUpdated(get_updated_element), :getUpdated)
           
           result[:ids]
-        }
+        # }
       end
       
       
       def get_deleted(object_type, start_date, end_date, name = nil)
         msg = "get_deleted(#{object_type}, #{start_date}, #{end_date})"
-        log(msg, name) {
+        # log(msg, name) {
           get_deleted_element = []
           get_deleted_element << 'type { :xmlns => "urn:sobject.partner.soap.sforce.com" }' << object_type
           get_deleted_element << :startDate << start_date
@@ -513,21 +517,21 @@ module ActiveRecord
           end
           
           ids
-        }      
+        # }      
       end
 
       
       def get_user_info(name = nil)
         msg = "get_user_info()"
-        log(msg, name) {
+        # log(msg, name) {
           get_result(@connection.getUserInfo([]), :getUserInfo)
-        }      
+        # }      
       end
       
       
       def retrieve_field_values(object_type, fields, ids, name = nil) 
         msg = "retrieve(#{object_type}, [#{ids.to_a.join(', ')}])"
-        log(msg, name) {
+        # log(msg, name) {
           retrieve_element = []      
           retrieve_element << :fieldList << fields.to_a.join(", ")
           retrieve_element << 'type { :xmlns => "urn:sobject.partner.soap.sforce.com" }' << object_type
@@ -548,7 +552,7 @@ module ActiveRecord
           end
           
           field_values
-        }
+        # }
       end
       
       
@@ -815,6 +819,7 @@ module ActiveRecord
       protected
 
       def queue_command(command)
+        puts("Queue: #{command}")
         # If @command_boxcar is not nil, then this is a transaction
         # and commands should be queued in the boxcar
         if @command_boxcar
