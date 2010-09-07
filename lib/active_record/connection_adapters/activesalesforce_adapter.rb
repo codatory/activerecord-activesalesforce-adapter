@@ -257,7 +257,7 @@ module ActiveRecord
       # Commits the transaction (and turns on auto-committing).
       def commit_db_transaction()   
         # log("Committing boxcar with #{@command_boxcar.length} commands", 'commit_db_transaction()')
-        puts("Committing boxcar with #{@command_boxcar.length} commands", 'commit_db_transaction()')
+        # puts("Committing boxcar with #{@command_boxcar.length} commands", 'commit_db_transaction()')
         
         previous_command = nil
         commands = []
@@ -399,8 +399,8 @@ module ActiveRecord
       end
       
       def select_one(sql, name = nil) #:nodoc:
-        debug "#{sql}"
-        puts "#{sql}"
+        # debug "#{sql}"
+        # puts "#{sql}"
         self.batch_size = 1
         
         result = select_all(sql, name)
@@ -438,7 +438,7 @@ module ActiveRecord
       
       def update(sql, name = nil) #:nodoc:
         sql = sql.gsub(/WHERE\s+\([A-Z]+\./mi,"WHERE ")
-        puts("Update: #{sql}, #{name}")
+        # puts("Update: #{sql}, #{name}")
         # log(sql, name) {
           # Convert sql to sobject
           table_name, columns, entity_def = lookup(sql.match(/UPDATE\s+(\w+)\s+/mi)[1])
@@ -454,7 +454,7 @@ module ActiveRecord
 		      null_fields = get_null_fields(columns, names, values, :updateable)          
           
           ids = sql.match(/WHERE\s+id\s*=\s*'(\w+)'/mi)
-          puts "return if ids.nil? #{ids}"
+          # puts "return if ids.nil? #{ids}"
           return if ids.nil?
           id = ids[1]
           
@@ -819,7 +819,7 @@ module ActiveRecord
       protected
 
       def queue_command(command)
-        puts("Queue: #{command}")
+        # puts("Queue: #{command}")
         # If @command_boxcar is not nil, then this is a transaction
         # and commands should be queued in the boxcar
         if @command_boxcar
