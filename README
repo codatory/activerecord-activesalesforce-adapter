@@ -4,8 +4,7 @@ ActiveSalesforce is an extension to the Rails Framework that allows for the dyna
 
 == Getting started
 
-TODO: fix install location
-1. gem install althor880-activerecord-activesalesforce-adapter --source http://gems.github.com
+1. gem install silent-e-activerecord-activesalesforce-adapter
 
 2. If you have not already done so generate your initial rails app:
 
@@ -15,8 +14,7 @@ TODO: fix install location
 
     Rails::Initializer.run do |config|
       ...
-TODO: fix install location
-      config.gem "silent-e-activerecord-activesalesforce-adapter", :source => 'http://gems.github.com', :lib => 'activerecord-activesalesforce-adapter'
+      config.gem "silent-e-activerecord-activesalesforce-adapter", :lib => 'activerecord-activesalesforce-adapter'
       ...
     end
 
@@ -67,7 +65,7 @@ script
 test
  Unit and functional tests along with fixtures.
 
-== Note about this fork
+== Note about my (silent-e) fork
 
 I created this fork to fix a problem I was having with SELECT statements.  Salesforce enforces single-quote escaping in strings with a backspace in WHERE condition expressions.  However, in INSERT and UPDATE statements the VALUES are escaped with two consecutive single-quotes.  See the table below for a visual explanation of my clumsy text one.  :)
 
