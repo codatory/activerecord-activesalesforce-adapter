@@ -831,6 +831,8 @@ module ActiveRecord
       # key for their WHERE statements, or so I've found.
       def quote_where(sql)
         where_match = sql.match(/WHERE\s*\((.*)\)/mi)
+        
+        return sql unless where_match
         where_conditions = where_match[1]
         
         # debug("where_conditions: #{where_conditions}")
