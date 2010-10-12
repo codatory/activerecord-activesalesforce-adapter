@@ -1,11 +1,11 @@
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
-    gemspec.name = "althor880-activerecord-activesalesforce-adapter"
+    gemspec.name = "silent-e-activerecord-activesalesforce-adapter"
     gemspec.summary = "ActiveSalesforce (ASF) is a Rails connection adapter that provides direct access to Salesforce.com hosted data and metadata via the ActiveRecord model layer. Objects, fields, and relationships are all auto surfaced as active record attributes and rels."
-    gemspec.email = "bschanfeldt@gmail.com"
-    gemspec.homepage = "http://github.com/blaines/althor880-activerecord-activesalesforce-adapter"
-    gemspec.authors = ["Doug Chasman","Luigi Montanez","Senthil Nayagam","Justin Ball","Jesse Hallett", "Andrew Freeberg", "Blaine Schanfeldt"]
+    gemspec.email = "matte@silent-e.com"
+    gemspec.homepage = "http://github.com/silent-e/activerecord-activesalesforce-adapter"
+    gemspec.authors = ["Doug Chasman","Luigi Montanez","Senthil Nayagam","Justin Ball","Jesse Hallett", "Andrew Freeberg", "Blaine Schanfeldt", "Matte Edens"]
     
     gemspec.test_files = 'test/**/*'
     
