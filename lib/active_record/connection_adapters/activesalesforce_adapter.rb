@@ -762,6 +762,9 @@ module ActiveRecord
         entity_def.columns
       end
       
+      def primary_key(table)
+        "id"
+      end
       
       def class_from_entity_name(entity_name)
         entity_klass = @class_to_entity_map[entity_name.upcase]
