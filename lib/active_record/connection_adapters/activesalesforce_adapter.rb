@@ -293,15 +293,20 @@ module ActiveRecord
       # DATABASE STATEMENTS ======================================
       
       def select_all(sql, name = nil) #:nodoc:
+
+        # fix the single quote escape method in WHERE condition expression
+        sql = quote_where(sql)
+
         # Arel adds the class to the selection - we do not want this i.e...
         # SELECT     contacts.* FROM  => SELECT * FROM
         sql = sql.gsub(/\s+[^\(][A-Z]+\./mi," ")
         raw_table_name = sql.match(/FROM\s+(\w+)/mi)[1]
-          table_name, columns, entity_def = lookup(raw_table_name)
-          
-          column_names = columns.map { |column| column.api_name }
 
-          # Check for SELECT COUNT(*) FROM query
+        table_name, columns, entity_def = lookup(raw_table_name)
+        
+        column_names = columns.map { |column| column.api_name }
+
+        # Check for SELECT COUNT(*) FROM query
         
         # Rails 1.1
         selectCountMatch = sql.match(/SELECT\s+COUNT\(\*\)\s+AS\s+count_all\s+FROM/mi)
@@ -820,6 +825,21 @@ module ActiveRecord
       end
 
       protected
+      
+      # fix single-quote escape sequence for WHERE condition expressions.  Salesforce enforces a backspace on SELECTs
+      # NOTE: this method is only used for SELECT queries.  INSERT/UPDATE queries are smart enough to use the primary
+      # key for their WHERE statements, or so I've found.
+      def quote_where(sql)
+        where_match = sql.match(/WHERE\s*\((.*)\)/mi)
+        where_conditions = where_match[1]
+        
+        # debug("where_conditions: #{where_conditions}")
+        where_conditions.gsub!(/''/, "\\\\'")
+
+        # debug("updated where_conditions: #{where_conditions.gsub(/''/, "\\\\'")}")
+
+        sql = "#{where_match.pre_match}WHERE (#{where_conditions})#{where_match.post_match}"
+      end
 
       def queue_command(command)
         # puts("Queue: #{command}")

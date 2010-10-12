@@ -6,6 +6,7 @@ begin
     gemspec.email = "matte@silent-e.com"
     gemspec.homepage = "http://github.com/silent-e/activerecord-activesalesforce-adapter"
     gemspec.authors = ["Doug Chasman","Luigi Montanez","Senthil Nayagam","Justin Ball","Jesse Hallett", "Andrew Freeberg", "Blaine Schanfeldt", "Matte Edens"]
+    gemspec.description = ''
     
     gemspec.test_files = 'test/**/*'
     

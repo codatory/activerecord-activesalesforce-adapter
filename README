@@ -69,7 +69,9 @@ test
 
 == Note about this fork
 
-I created this fork to fix a problem I was having with SELECT statements.  Salesforce enforces single-quote escaping in strings with a backspace in WHERE condition expressions.  However, in INSERT and UPDATE statements the VALUES are escaped with two consecutive single-quotes.  See the table below for a visual explanation of my clumsy text one.  :)  This fork specifically tweaks SELECT conditions and is based on blaines work on bringing ASF up to speed with Rails 3.  I will attempt to keep it in step with blaines work until we can get a consensus and possibly get a official update to the canonical ASF gem.
+I created this fork to fix a problem I was having with SELECT statements.  Salesforce enforces single-quote escaping in strings with a backspace in WHERE condition expressions.  However, in INSERT and UPDATE statements the VALUES are escaped with two consecutive single-quotes.  See the table below for a visual explanation of my clumsy text one.  :)
+
+This fork specifically tweaks SELECT WHERE conditions and is based on blaines work on bringing ASF up to speed with Rails 3.  I will attempt to keep it in step with blaines work until we can get a consensus and possibly get a official update to the canonical ASF gem.
 
 | Query Type                  | Escape sequence required                            |
 | WHERE (conditionExpression) | ... WHERE (Name = 'Let\'s do the Time Warp again!') |
