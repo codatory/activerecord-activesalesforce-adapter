@@ -49,12 +49,12 @@ module ActiveRecord
     def self.activesalesforce_connection(config) # :nodoc:
       debug("\nUsing ActiveSalesforce connection\n")
       
-      # Default to production system using 11.0 API
+      # Default to production system using 19.0 API
       url = config[:url]
       url = "https://www.salesforce.com" unless url
 
       uri = URI.parse(url)
-      uri.path = "/services/Soap/u/11.0"
+      uri.path = "/services/Soap/u/19.0"
       url = uri.to_s      
       
       sid = config[:sid]
@@ -190,7 +190,7 @@ module ActiveRecord
       end
       
       
-      # TRANSACTIOn SUPPORT (Boxcarring really because the salesforce.com api does not support transactions)
+      # TRANSACTION SUPPORT (Boxcarring really because the salesforce.com api does not support transactions)
 
       # Override AbstractAdapter's transaction method to implement
       # per-connection support for nested transactions that do not commit until
@@ -257,7 +257,6 @@ module ActiveRecord
       # Commits the transaction (and turns on auto-committing).
       def commit_db_transaction()   
         # log("Committing boxcar with #{@command_boxcar.length} commands", 'commit_db_transaction()')
-        # puts("Committing boxcar with #{@command_boxcar.length} commands", 'commit_db_transaction()')
         
         previous_command = nil
         commands = []
@@ -404,8 +403,6 @@ module ActiveRecord
       end
       
       def select_one(sql, name = nil) #:nodoc:
-        # debug "#{sql}"
-        # puts "#{sql}"
         self.batch_size = 1
         
         result = select_all(sql, name)
@@ -442,8 +439,9 @@ module ActiveRecord
       
       
       def update(sql, name = nil) #:nodoc:
+        # strip the table name prefix like we did in select_all.  Rails 3
         sql = sql.gsub(/WHERE\s+\([A-Z]+\./mi,"WHERE ")
-        # puts("Update: #{sql}, #{name}")
+
         # log(sql, name) {
           # Convert sql to sobject
           table_name, columns, entity_def = lookup(sql.match(/UPDATE\s+(\w+)\s+/mi)[1])
@@ -459,7 +457,6 @@ module ActiveRecord
 		      null_fields = get_null_fields(columns, names, values, :updateable)          
           
           ids = sql.match(/WHERE\s+id\s*=\s*'(\w+)'/mi)
-          # puts "return if ids.nil? #{ids}"
           return if ids.nil?
           id = ids[1]
           
@@ -607,11 +604,21 @@ module ActiveRecord
       
       def extract_sql_modifier(soql, modifier)
           value = soql.match(/\s+#{modifier}\s+(\d+)/mi)
-          if value            
+          if value
             value = value[1].to_i
-            soql.sub!(/\s+#{modifier}\s+\d+/mi, "")
+            if !(modifier.upcase == "LIMIT")
+              # If it is not the keyword - LIMIT, remove it from the SOQL
+              soql.sub!(/\s+#{modifier}\s+\d+/mi, "")
+            else
+              # If it is the keyword - LIMIT, do not remove it from the SOQL
+            end
+            # SOQL now supports LIMIT clause. If the user is not an app admin &
+            # queries Newsfeed or EntitySubscription & without q limit (e.g. > 1000),
+            # it would cause MQL_FORMED_QUERY exception:
+            # However, OFFSET is still not supported by SOQL.
+            # ***NOTE: needs to change it in the gem to make it effective.
           end
-          
+
           value
       end
       
@@ -844,7 +851,6 @@ module ActiveRecord
       end
 
       def queue_command(command)
-        # puts("Queue: #{command}")
         # If @command_boxcar is not nil, then this is a transaction
         # and commands should be queued in the boxcar
         if @command_boxcar
