@@ -299,7 +299,7 @@ module ActiveRecord
 
         # Arel adds the class to the selection - we do not want this i.e...
         # SELECT     contacts.* FROM  => SELECT * FROM
-        sql = sql.gsub(/\s+[^\(][A-Z]+\./mi," ")
+        sql = sql.gsub(/SELECT\s+[^\(][A-Z]+\./mi," ")
         raw_table_name = sql.match(/FROM\s+(\w+)/mi)[1]
 
         table_name, columns, entity_def = lookup(raw_table_name)
