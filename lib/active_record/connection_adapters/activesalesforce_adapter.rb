@@ -49,7 +49,7 @@ module ActiveRecord
     # Establishes a connection to the database that's used by all Active Record objects.
     def self.activesalesforce_connection(config) # :nodoc:
       debug("\nUsing ActiveSalesforce connection\n")
-
+      
       # Default to production system using 19.0 API
       url = config[:url]
       url = "https://www.salesforce.com" unless url
@@ -191,7 +191,7 @@ module ActiveRecord
         connect
       end
 
-      # TRANSACTIOn SUPPORT (Boxcarring really because the salesforce.com api does not support transactions)
+      # TRANSACTION SUPPORT (Boxcarring really because the salesforce.com api does not support transactions)
 
       # Override AbstractAdapter's transaction method to implement
       # per-connection support for nested transactions that do not commit until
@@ -443,6 +443,7 @@ module ActiveRecord
 
       def update(sql, name = nil) #:nodoc:
         # From silent-e, solution for ARel
+        # strip the table name prefix like we did in select_all.  Rails 3
         sql = sql.gsub(/WHERE\s+\([A-Z]+\./mi,"WHERE ")
 
 
