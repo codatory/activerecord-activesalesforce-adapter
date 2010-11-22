@@ -1,17 +1,14 @@
-Welcome to Active Salesforce
-============================
+# Welcome to Active Salesforce
 
 ActiveSalesforce is an extension to the Rails Framework that allows for the dynamic creation and management of ActiveRecord objects through the use of Salesforce meta-data and uses a Salesforce.com organization as the backing store.
 
 See notes below about my fork.
 
-Installation
-============
+# Installation
 
 I have a compiled build in my Downloads area or clone my repo, build the gem, and install.
 
-Getting started
-===============
+# Getting started
 
 1. If you have not already done so generate your initial rails app:
 
@@ -50,8 +47,7 @@ Getting started
 
 6. Proceed using standard Rails development techniques!
 
-Advanced Features
-=================
+# Advanced Features
 
 1. Session ID based Authentication: Add the following to /app/controllers/application.rb to enable SID auth for all controllers
 
@@ -61,8 +57,7 @@ Advanced Features
 
 2. Boxcar'ing of updates, inserts, and deletes. Use <YourModel>.transaction() to demark boxcar boundaries.
 
-Description of contents
-=======================
+# Description of contents
 
 <dl>
   <dt>lib</dt>
@@ -75,8 +70,7 @@ Description of contents
   <dd>Unit and functional tests along with fixtures.</dd>
 </dl>
 
-Note about my (silent-e) fork
-=============================
+# Note about my (silent-e) fork
 
 I created this fork to fix a problem I was having with SELECT statements.  Salesforce enforces single-quote escaping in strings with a backspace in WHERE condition expressions.  However, in INSERT and UPDATE statements the VALUES are escaped with two consecutive single-quotes.  See the table below for a visual explanation of my clumsy text one.  :)
 
